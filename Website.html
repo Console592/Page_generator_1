@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор паролей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input, button {
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .admin-panel {
+            display: none;
+            margin-top: 20px;
+            background: #ffe6e6;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        #adminBtn {
+            background-color: #f44336;
+            margin-top: 20px;
+        }
+
+        #passwordResult {
+            margin: 15px 0;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Генератор надежных паролей</h2>
+        <input type="text" id="userName" placeholder="Введите ваше имя">
+        <button onclick="generatePassword()">Сгенерировать пароль</button>
+        <div id="passwordResult"></div>
+
+        <button id="adminBtn" onclick="toggleAdminPanel()">Админ-панель</button>
+        <div class="admin-panel" id="adminPanel">
+            <h3>Административная панель</h3>
+            <div id="userList"></div>
+        </div>
+    </div>
+
+    <script>
+        let users = [];
+
+        function generatePassword() {
+            const name = document.getElementById('userName').value.trim();
+            if (!name) {
+                alert('Пожалуйста, введите ваше имя');
+                return;
+            }
+
+            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            let password = "";
+            
+            for (let i = 0; i < 9; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+
+            // Сохраняем пользователя
+            users.push({ name: name, password: password });
+            
+            // Показываем результат
+            document.getElementById('passwordResult').innerHTML = 
+                `Привет, ${name}! Твой новый пароль: <strong>${password}</strong>`;
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            
+            if (panel.style.display === 'block') {
+                updateUserList();
+            }
+        }
+
+        function updateUserList() {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '<h4>Список пользователей:</h4>';
+            
+            users.forEach(user => {
+                userList.innerHTML += 
+                    `<p>Имя: ${user.name} - Пароль: ${user.password}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
